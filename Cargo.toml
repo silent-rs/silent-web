@@ -1,0 +1,18 @@
+[package]
+name = "silent-web"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+members = [".", "commom", "entity", "migration"]
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+dotenv = { version = "0.15.0", features = ["clap"] }
+silent = "1"
+tokio = "1"
+
+commom = { path = "commom" }
+entity = { path = "entity" }
+migration = { path = "migration" }
