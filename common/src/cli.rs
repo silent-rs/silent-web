@@ -1,13 +1,18 @@
 use clap::{Parser, Subcommand};
 
+pub fn init_args() -> Cli {
+    dotenv::dotenv().expect("读取.env文件失败");
+    Cli::parse()
+}
+
 #[derive(Parser)]
 /// Silent Web 服务框架
 #[command(author, version, about, long_about = None)]
-pub(crate) struct Cli {
+pub struct Cli {
     #[command(subcommand, help = "数据库迁移")]
-    pub(crate) migrate: Option<MigrationCommands>,
+    pub migrate: Option<MigrationCommands>,
     #[arg(long, help = "启动 Web 服务", default_value_t = true)]
-    pub(crate) server: bool,
+    pub server: bool,
 
     #[arg(
         global = true,
@@ -31,7 +36,7 @@ pub(crate) struct Cli {
 }
 
 #[derive(Subcommand)]
-pub(crate) enum MigrationCommands {
+pub enum MigrationCommands {
     #[command(
         about = "从数据库中删除所有表，然后重新应用所有迁移",
         display_order = 30

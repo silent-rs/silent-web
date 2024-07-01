@@ -1,34 +1,20 @@
-use crate::cli::Cli;
-use clap::Parser;
-use commom::handle_panic;
-use migration::sea_orm::{ConnectOptions, Database};
-
-mod cli;
-mod migrate;
+use api::get_routes;
+use common::cli::init_args;
+use common::database::{get_db_conn, migrate};
+use common::server::{init_route, init_server};
 
 #[tokio::main]
 async fn main() {
-    let args = Cli::parse();
+    let args = init_args();
 
-    let url = args
-        .database_url
-        .expect("Environment variable 'DATABASE_URL' not set");
-    let schema = args.database_schema.unwrap_or_else(|| "public".to_owned());
-
-    let connect_options = ConnectOptions::new(url)
-        .set_schema_search_path(schema)
-        .to_owned();
-    let db = &Database::connect(connect_options)
-        .await
-        .expect("Fail to acquire database connection");
+    let db = get_db_conn(&args).await;
     // 迁移数据库
     if let Some(migrate_cli) = args.migrate {
-        migrate::migrate(migrate_cli, db)
-            .await
-            .unwrap_or_else(handle_panic);
+        migrate(migrate_cli, &db).await;
         return;
     }
     if args.server {
         // todo!("start server")
+        init_server().serve(init_route(get_routes())).await
     }
 }

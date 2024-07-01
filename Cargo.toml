@@ -4,15 +4,19 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace]
-members = [".", "commom", "entity", "migration"]
+members = [".", "api", "common", "entity", "migration", "services"]
+
+[workspace.package]
+publish = false
+authors = ["Hubert Shelley <hubertshelley@163.com>"]
+homepage = "https://github.com/hubertshelley/silent"
+license = "Apache-2.0"
+repository = "https://github.com/hubertshelley/silent-web"
+version = "0.1.0"
 
 [dependencies]
-anyhow = "1"
-clap = { version = "4", features = ["derive"] }
 dotenv = { version = "0.15.0", features = ["clap"] }
-silent = "1"
 tokio = "1"
 
-commom = { path = "commom" }
-entity = { path = "entity" }
-migration = { path = "migration" }
+common = { path = "common" }
+api = { path = "api" }
